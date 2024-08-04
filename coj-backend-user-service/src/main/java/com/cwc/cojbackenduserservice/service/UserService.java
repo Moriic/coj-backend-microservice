@@ -2,8 +2,10 @@ package com.cwc.cojbackenduserservice.service;
 
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.cwc.cojbackendcommon.common.BaseResponse;
 import com.cwc.cojbackendmodel.model.entity.User;
 import com.cwc.cojbackendmodel.model.vo.LoginUserVO;
+import com.cwc.cojbackendmodel.model.vo.RefreshTokenVO;
 import com.cwc.cojbackendmodel.model.vo.UserVO;
 
 /**
@@ -50,4 +52,6 @@ public interface UserService extends IService<User> {
     boolean isAdmin(User user);
 
     UserVO getLoginUserVO();
+
+    RefreshTokenVO refreshToken(String refreshToken);
 }

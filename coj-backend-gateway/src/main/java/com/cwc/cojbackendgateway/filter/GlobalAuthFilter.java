@@ -1,9 +1,15 @@
 package com.cwc.cojbackendgateway.filter;
 
+import cn.hutool.json.JSONUtil;
+import com.cwc.cojbackendcommon.common.BaseResponse;
+import com.cwc.cojbackendcommon.common.ErrorCode;
+import com.cwc.cojbackendcommon.common.ResultUtils;
 import com.cwc.cojbackendcommon.constant.JwtClaimsConstant;
 import com.cwc.cojbackendcommon.utils.JwtUtil;
 import com.cwc.cojbackendgateway.properties.JwtProperties;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
@@ -21,15 +27,17 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Component
+@Slf4j
 public class GlobalAuthFilter implements GlobalFilter, Ordered {
 
     private final AntPathMatcher antPathMatcher = new AntPathMatcher();
 
     private final JwtProperties jwtProperties;
 
-    String[] excludePatterns = new String[]{"/swagger-resources/**", "/webjars/**", "/v2/**", "/swagger-ui.html/**",
+    String[] excludePatterns = new String[]{
+            "/swagger-resources/**", "/webjars/**", "/v2/**", "/swagger-ui.html/**",
             "/api", "/api-docs", "/api-docs/**", "/doc.html/**", "/v3/**", "/api/*/v2/api-docs",
-            "/api/user/login", "/api/user/register",
+            "/api/user/login", "/api/user/register", "/api/user/refreshToken",
             "/api/question/list/page/vo"};
 
     public GlobalAuthFilter(JwtProperties jwtProperties) {
@@ -40,6 +48,8 @@ public class GlobalAuthFilter implements GlobalFilter, Ordered {
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         ServerHttpRequest serverHttpRequest = exchange.getRequest();
         String path = serverHttpRequest.getURI().getPath();
+        log.info("request path:{}", path);
+        log.info("serverHttpRequest:{}", serverHttpRequest.getHeaders());
         // 判断路径中是否包含 inner，只允许内部调用
         if (antPathMatcher.match("/**/inner/**", path)) {
             ServerHttpResponse response = exchange.getResponse();
@@ -57,7 +67,7 @@ public class GlobalAuthFilter implements GlobalFilter, Ordered {
         if (headers != null && !headers.isEmpty()) {
             token = headers.get(0);
         }
-
+        // 校验 token
         try {
             Claims claims = JwtUtil.parseJWT(jwtProperties.getUserSecretKey(), token);
             long userId = Long.parseLong(claims.get(JwtClaimsConstant.USER_ID).toString());
@@ -67,6 +77,13 @@ public class GlobalAuthFilter implements GlobalFilter, Ordered {
                     .request(builder -> builder.header(JwtClaimsConstant.ROLE, role))
                     .build();
 
+        } catch (ExpiredJwtException expiredJwtException) {         // token 过期
+            ServerHttpResponse response = exchange.getResponse();
+            DataBufferFactory dataBufferFactory = response.bufferFactory();
+            BaseResponse expireError = ResultUtils.error(ErrorCode.TOKEN_EXPIRE_ERROR);
+            DataBuffer dataBuffer = dataBufferFactory.wrap(JSONUtil.toJsonStr(expireError).getBytes());
+            log.info("token 过期");
+            return response.writeWith(Mono.just(dataBuffer));
         } catch (Exception ex) {
             // 拦截
             ServerHttpResponse response = exchange.getResponse();
@@ -90,6 +107,7 @@ public class GlobalAuthFilter implements GlobalFilter, Ordered {
 
     /**
      * 优先级提到最高
+     *
      * @return
      */
     @Override

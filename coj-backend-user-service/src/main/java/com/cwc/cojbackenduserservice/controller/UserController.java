@@ -6,6 +6,7 @@ import com.cwc.cojbackendcommon.common.ErrorCode;
 import com.cwc.cojbackendcommon.common.ResultUtils;
 import com.cwc.cojbackendcommon.constant.UserConstant;
 import com.cwc.cojbackendcommon.exception.BusinessException;
+import com.cwc.cojbackendmodel.model.vo.RefreshTokenVO;
 import com.cwc.cojbackenduserservice.service.UserService;
 import com.cwc.cojbackendmodel.model.dto.user.*;
 import com.cwc.cojbackendmodel.model.vo.LoginUserVO;
@@ -79,5 +80,10 @@ public class UserController {
     @AuthCheck(mustRole = UserConstant.USER_ROLE)
     public BaseResponse<UserVO> getLoginUser() {
         return ResultUtils.success(userService.getLoginUserVO());
+    }
+
+    @PostMapping("/refreshToken")
+    public BaseResponse<RefreshTokenVO> refreshToken(@RequestBody UserRefreshRequest userRefreshRequest) {
+        return ResultUtils.success(userService.refreshToken(userRefreshRequest.getRefreshToken()));
     }
 }

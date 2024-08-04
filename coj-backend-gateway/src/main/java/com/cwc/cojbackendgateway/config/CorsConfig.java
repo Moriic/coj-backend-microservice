@@ -8,6 +8,7 @@ import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 import org.springframework.web.util.pattern.PathPatternParser;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 // 处理跨域
 @Configuration
@@ -19,7 +20,7 @@ public class CorsConfig {
         config.addAllowedMethod("*");
         config.setAllowCredentials(true);
         // todo 实际改为线上真实域名、本地域名
-        config.setAllowedOriginPatterns(Arrays.asList("*"));
+        config.setAllowedOriginPatterns(Collections.singletonList("*"));
         config.addAllowedHeader("*");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource(new PathPatternParser());
         source.registerCorsConfiguration("/**", config);

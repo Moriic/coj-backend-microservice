@@ -3,6 +3,7 @@ package com.cwc.cojbackenduserservice.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cwc.cojbackendcommon.common.ErrorCode;
+import com.cwc.cojbackendcommon.common.ResultUtils;
 import com.cwc.cojbackendcommon.constant.JwtClaimsConstant;
 import com.cwc.cojbackendcommon.exception.BusinessException;
 import com.cwc.cojbackendcommon.utils.BaseContext;
@@ -10,10 +11,12 @@ import com.cwc.cojbackendcommon.utils.JwtUtil;
 import com.cwc.cojbackendmodel.model.entity.User;
 import com.cwc.cojbackendmodel.model.enums.UserRoleEnum;
 import com.cwc.cojbackendmodel.model.vo.LoginUserVO;
+import com.cwc.cojbackendmodel.model.vo.RefreshTokenVO;
 import com.cwc.cojbackendmodel.model.vo.UserVO;
 import com.cwc.cojbackenduserservice.mapper.UserMapper;
 import com.cwc.cojbackenduserservice.properties.JwtProperties;
 import com.cwc.cojbackenduserservice.service.UserService;
+import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -27,8 +30,6 @@ import java.util.Map;
 
 /**
  * 用户服务实现
- *
-
  */
 @Service
 @Slf4j
@@ -112,11 +113,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         String token = JwtUtil.createJWT(
                 jwtProperties.getUserSecretKey(),
-                jwtProperties.getUserTtl(),
+                jwtProperties.getTokenTtl(),
+                claims);
+
+        String refreshToken = JwtUtil.createJWT(
+                jwtProperties.getUserSecretKey(),
+                jwtProperties.getRefreshTokenTtl(),
                 claims);
         LoginUserVO loginUserVO = new LoginUserVO();
         // 返回jwt令牌
         loginUserVO.setToken(token);
+        loginUserVO.setRefreshToken(refreshToken);
         BeanUtils.copyProperties(user, loginUserVO);
         return loginUserVO;
     }
@@ -145,5 +152,25 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public UserVO getLoginUserVO() {
         User user = getById(BaseContext.getCurrentUser().getId());
         return getUserVO(user);
+    }
+
+    @Override
+    public RefreshTokenVO refreshToken(String refreshToken) {
+        try {
+            Claims claims = JwtUtil.parseJWT(jwtProperties.getUserSecretKey(), refreshToken);
+            String token = JwtUtil.createJWT(
+                    jwtProperties.getUserSecretKey(),
+                    jwtProperties.getTokenTtl(),
+                    claims);
+
+            refreshToken = JwtUtil.createJWT(
+                    jwtProperties.getUserSecretKey(),
+                    jwtProperties.getRefreshTokenTtl(),
+                    claims);
+
+            return new RefreshTokenVO(token, refreshToken);
+        } catch (Exception e) {
+            throw new BusinessException(ErrorCode.LOGOUT_ERROR);
+        }
     }
 }

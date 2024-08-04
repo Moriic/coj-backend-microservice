@@ -52,5 +52,10 @@ public class LoginUserVO implements Serializable {
      */
     private String token;
 
+    /**
+     * refreshToken
+     */
+    private String refreshToken;
+
     private static final long serialVersionUID = 1L;
 }

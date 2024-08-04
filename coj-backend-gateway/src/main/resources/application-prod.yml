@@ -36,3 +36,14 @@ knife4j:
       enabled: true
       # ④ 第四行配置，聚合子服务全部为Swagger2规范的文档
       version: swagger2
+
+coj:
+  jwt:
+    # 设置jwt签名加密时使用的秘钥
+    user-secret-key: secretKey
+    # 设置前端传递过来的令牌名称
+    user-token-name: Authorization
+    # 设置token过期时间
+    token-ttl: 7200000
+    # 设置refreshToken过期时间
+    refresh-token-ttl: 720000000

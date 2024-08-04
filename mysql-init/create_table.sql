@@ -31,7 +31,7 @@ create table if not exists question
     tags         varchar(1024)                      null comment '标签列表（json 数组）',
     answer       text                               null comment '题目答案',
     submit_num   int      default 0                 not null comment '题目提交数',
-    accepted_num   int      default 0                 not null comment '题目通过数',
+    accepted_num int      default 0                 not null comment '题目通过数',
     judge_case   text                               null comment '判题用例(JSON 数组)',
     judge_config text                               null comment '判题配置(JSON 数组)',
     user_id      bigint                             not null comment '创建用户 id',
