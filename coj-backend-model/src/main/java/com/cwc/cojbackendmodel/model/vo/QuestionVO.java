@@ -3,13 +3,11 @@ package com.cwc.cojbackendmodel.model.vo;
 import cn.hutool.json.JSONUtil;
 import com.cwc.cojbackendmodel.model.dto.question.JudgeConfig;
 import com.cwc.cojbackendmodel.model.entity.Question;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -61,12 +59,12 @@ public class QuestionVO implements Serializable {
     /**
      * 创建时间
      */
-    private Date createTime;
+    private LocalDateTime createTime;
 
     /**
      * 更新时间
      */
-    private Date updateTime;
+    private LocalDateTime updateTime;
 
     /**
      * 创建题目人的信息

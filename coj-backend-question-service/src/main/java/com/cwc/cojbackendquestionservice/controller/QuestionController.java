@@ -1,9 +1,7 @@
 package com.cwc.cojbackendquestionservice.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.cwc.cojbackendcommon.utils.BaseContext;
-import com.cwc.cojbackendcommon.utils.UserContext;
-import com.google.gson.Gson;
 import com.cwc.cojbackendcommon.annotation.AuthCheck;
 import com.cwc.cojbackendcommon.common.BaseResponse;
 import com.cwc.cojbackendcommon.common.DeleteRequest;
@@ -12,6 +10,8 @@ import com.cwc.cojbackendcommon.common.ResultUtils;
 import com.cwc.cojbackendcommon.constant.UserConstant;
 import com.cwc.cojbackendcommon.exception.BusinessException;
 import com.cwc.cojbackendcommon.exception.ThrowUtils;
+import com.cwc.cojbackendcommon.utils.BaseContext;
+import com.cwc.cojbackendcommon.utils.UserContext;
 import com.cwc.cojbackendmodel.model.dto.question.*;
 import com.cwc.cojbackendmodel.model.dto.questionsubmit.QuestionSubmitAddRequest;
 import com.cwc.cojbackendmodel.model.dto.questionsubmit.QuestionSubmitQueryRequest;
@@ -21,16 +21,17 @@ import com.cwc.cojbackendmodel.model.vo.QuestionSubmitVO;
 import com.cwc.cojbackendmodel.model.vo.QuestionVO;
 import com.cwc.cojbackendquestionservice.service.QuestionService;
 import com.cwc.cojbackendquestionservice.service.QuestionSubmitService;
+import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * 题目接口
-
  */
 @RestController
 @RequestMapping("/")
@@ -316,6 +317,23 @@ public class QuestionController {
         return ResultUtils.success(questionSubmitService.getQuestionSubmitVOPage(questionSubmitPage));
     }
 
-
+    /**
+     * 获取个人提交记录
+     *
+     * @param questionSubmitQueryRequest
+     * @return
+     */
+    @PostMapping("/question_submit/list/my")
+    public BaseResponse<List<QuestionSubmitVO>> getMyQuestionSubmit(@RequestBody QuestionSubmitQueryRequest questionSubmitQueryRequest) {
+        questionSubmitQueryRequest.setUserId(BaseContext.getCurrentUser().getId());
+        QueryWrapper<QuestionSubmit> queryWrapper = questionSubmitService.getQueryWrapper(questionSubmitQueryRequest);
+        List<QuestionSubmit> questionSubmitList = questionSubmitService.list(queryWrapper);
+        List<QuestionSubmitVO> questionSubmitVOList = new ArrayList<>();
+        for (QuestionSubmit questionSubmit : questionSubmitList) {
+            QuestionSubmitVO questionSubmitVO = QuestionSubmitVO.objToVo(questionSubmit);
+            questionSubmitVOList.add(questionSubmitVO);
+        }
+        return ResultUtils.success(questionSubmitVOList);
+    }
 
 }

@@ -1,5 +1,6 @@
 package com.cwc.cojbackendcommon.config;
 
+import cn.hutool.core.date.DatePattern;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cwc.cojbackendcommon.interceptor.JwtTokenUserInterceptor;
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -7,6 +8,8 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -15,6 +18,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupp
 
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
@@ -58,6 +63,8 @@ public class WebMVCConfig extends WebMvcConfigurationSupport {
         SimpleModule simpleModule = new SimpleModule();
         simpleModule.addSerializer(Long.class, longToStringSerializer);
         simpleModule.addSerializer(Long.TYPE, longToStringSerializer);
+        simpleModule.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(DateTimeFormatter.ofPattern(DatePattern.NORM_DATETIME_PATTERN)));
+        simpleModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(DatePattern.NORM_DATETIME_PATTERN)));
 
         // Register the module with the ObjectMapper
         objectMapper.registerModule(simpleModule);

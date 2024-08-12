@@ -54,14 +54,4 @@ public class JwtUtil {
                 // 设置需要解析的jwt
                 .parseClaimsJws(token).getBody();
     }
-
-    /**
-     * @param claims 解密后的
-     * @param token  token
-     * @return 是否过期
-     */
-    private boolean isTokenExpired(Claims claims, String token) {
-        Date expiredDate = claims.getExpiration();
-        return expiredDate != null && !expiredDate.before(new Date());
-    }
 }

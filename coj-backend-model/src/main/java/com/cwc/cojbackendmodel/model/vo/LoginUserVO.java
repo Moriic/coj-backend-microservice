@@ -3,7 +3,7 @@ package com.cwc.cojbackendmodel.model.vo;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * 已登录用户视图（脱敏）
@@ -40,12 +40,12 @@ public class LoginUserVO implements Serializable {
     /**
      * 创建时间
      */
-    private Date createTime;
+    private LocalDateTime createTime;
 
     /**
      * 更新时间
      */
-    private Date updateTime;
+    private LocalDateTime updateTime;
 
     /**
      * token
