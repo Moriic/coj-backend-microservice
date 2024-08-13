@@ -10,6 +10,7 @@ import com.cwc.cojbackendcommon.exception.ThrowUtils;
 import com.cwc.cojbackendcommon.utils.SqlUtils;
 import com.cwc.cojbackendmodel.model.dto.question.QuestionQueryRequest;
 import com.cwc.cojbackendmodel.model.entity.Question;
+import com.cwc.cojbackendmodel.model.entity.QuestionAllVO;
 import com.cwc.cojbackendmodel.model.entity.User;
 import com.cwc.cojbackendmodel.model.vo.QuestionVO;
 import com.cwc.cojbackendmodel.model.vo.UserVO;
@@ -22,7 +23,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -154,6 +154,19 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
         }).collect(Collectors.toList());
         questionVOPage.setRecords(questionVOList);
         return questionVOPage;
+    }
+
+    @Override
+    public Page<QuestionAllVO> getQuestionAllVOPage(Page<Question> questionPage) {
+        List<Question> questionList = questionPage.getRecords();
+        Page<QuestionAllVO> questionAllVOPage = new Page<>(questionPage.getCurrent(), questionPage.getSize(), questionPage.getTotal());
+        if (CollectionUtils.isEmpty(questionList)) {
+            return questionAllVOPage;
+        }
+
+        List<QuestionAllVO> questionVOList = questionList.stream().map(QuestionAllVO::objToVo).collect(Collectors.toList());
+        questionAllVOPage.setRecords(questionVOList);
+        return questionAllVOPage;
     }
 
 

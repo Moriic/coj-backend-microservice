@@ -5,9 +5,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.cwc.cojbackendmodel.model.dto.question.QuestionQueryRequest;
 import com.cwc.cojbackendmodel.model.entity.Question;
+import com.cwc.cojbackendmodel.model.entity.QuestionAllVO;
 import com.cwc.cojbackendmodel.model.vo.QuestionVO;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
 * @author cwc
@@ -48,5 +47,6 @@ public interface QuestionService extends IService<Question> {
      * @return
      */
     Page<QuestionVO> getQuestionVOPage(Page<Question> questionPage);
-    
+
+    Page<QuestionAllVO> getQuestionAllVOPage(Page<Question> questionPage);
 }

@@ -16,6 +16,7 @@ import com.cwc.cojbackendmodel.model.dto.question.*;
 import com.cwc.cojbackendmodel.model.dto.questionsubmit.QuestionSubmitAddRequest;
 import com.cwc.cojbackendmodel.model.dto.questionsubmit.QuestionSubmitQueryRequest;
 import com.cwc.cojbackendmodel.model.entity.Question;
+import com.cwc.cojbackendmodel.model.entity.QuestionAllVO;
 import com.cwc.cojbackendmodel.model.entity.QuestionSubmit;
 import com.cwc.cojbackendmodel.model.vo.QuestionSubmitVO;
 import com.cwc.cojbackendmodel.model.vo.QuestionVO;
@@ -233,12 +234,12 @@ public class QuestionController {
      */
     @PostMapping("/list/page")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    public BaseResponse<Page<Question>> listQuestionByPage(@RequestBody QuestionQueryRequest questionQueryRequest) {
+    public BaseResponse<Page<QuestionAllVO>> listQuestionByPage(@RequestBody QuestionQueryRequest questionQueryRequest) {
         long current = questionQueryRequest.getCurrent();
         long size = questionQueryRequest.getPageSize();
         Page<Question> questionPage = questionService.page(new Page<>(current, size),
                 questionService.getQueryWrapper(questionQueryRequest));
-        return ResultUtils.success(questionPage);
+        return ResultUtils.success(questionService.getQuestionAllVOPage(questionPage));
     }
 
     // endregion
