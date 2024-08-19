@@ -34,10 +34,10 @@ public class FeignConfig {
         return objectMapper;
     }
 
-    @Bean
-    public Encoder feignEncoder() {
-        return new JacksonEncoder(feignObjectMapper());
-    }
+//    @Bean
+//    public Encoder feignEncoder() {
+//        return new JacksonEncoder(feignObjectMapper());
+//    }
 
     @Bean
     public Decoder feignDecoder() {

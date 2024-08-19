@@ -7,7 +7,6 @@ import feign.Logger;
 import feign.RequestInterceptor;
 import org.springframework.context.annotation.Bean;
 
-
 public class DefaultFeignConfig {
     @Bean
     public Logger.Level fullLoggerLevel() {

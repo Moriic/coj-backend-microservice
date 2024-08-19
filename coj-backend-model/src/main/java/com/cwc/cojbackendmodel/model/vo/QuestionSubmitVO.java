@@ -36,6 +36,11 @@ public class QuestionSubmitVO implements Serializable {
     private JudgeInfo judgeInfo;
 
     /**
+     * 错误信息
+     */
+    private String errorMessage;
+
+    /**
      * 判题状态（0 - 待判题、1 - 判题中、2 - 成功、3 - 失败）
      */
     private Integer status;

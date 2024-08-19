@@ -11,12 +11,14 @@ import com.cwc.cojbackendmodel.model.codesandbox.ExecuteCodeRequest;
 import com.cwc.cojbackendmodel.model.codesandbox.ExecuteCodeResponse;
 import com.cwc.cojbackendmodel.model.codesandbox.JudgeInfo;
 import com.cwc.cojbackendmodel.model.dto.question.JudgeCase;
+import com.cwc.cojbackendmodel.model.dto.question.JudgeConfig;
 import com.cwc.cojbackendmodel.model.entity.Question;
 import com.cwc.cojbackendmodel.model.entity.QuestionSubmit;
 import com.cwc.cojbackendmodel.model.enums.QuestionSubmitStatusEnum;
 import com.cwc.cojbackendserviceclient.service.QuestionFeignClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import springfox.documentation.spring.web.json.Json;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -64,6 +66,7 @@ public class JudgeServiceImpl implements JudgeService {
         codeSandbox = new CodeSandboxProxy(codeSandbox);
         String language = questionSubmit.getLanguage();
         String code = questionSubmit.getCode();
+        JudgeConfig judgeConfig = JSONUtil.toBean(question.getJudgeConfig(), JudgeConfig.class);
         // 获取输入用例
         String judgeCaseStr = question.getJudgeCase();
         List<JudgeCase> judgeCaseList = JSONUtil.toList(judgeCaseStr, JudgeCase.class);
@@ -72,23 +75,29 @@ public class JudgeServiceImpl implements JudgeService {
                 .code(code)
                 .language(language)
                 .inputList(inputList)
+                .timeLimit(judgeConfig.getTimeLimit())
                 .build();
         ExecuteCodeResponse executeCodeResponse = codeSandbox.executeCode(executeCodeRequest);
         List<String> outputList = executeCodeResponse.getOutputList();
-        // 5）根据沙箱的执行结果，设置题目的判题状态和信息
-        JudgeContext judgeContext = new JudgeContext();
-        judgeContext.setJudgeInfo(executeCodeResponse.getJudgeInfo());
-        judgeContext.setInputList(inputList);
-        judgeContext.setOutputList(outputList);
-        judgeContext.setJudgeCaseList(judgeCaseList);
-        judgeContext.setQuestion(question);
-        judgeContext.setQuestionSubmit(questionSubmit);
-        JudgeInfo judgeInfo = judgeManager.doJudge(judgeContext);
+        JudgeInfo judgeInfo = executeCodeResponse.getJudgeInfo();
+        String errorMessage = executeCodeResponse.getMessage();
+        if (executeCodeResponse.getStatus() == 1) {   // 执行成功
+            // 5）根据沙箱的执行结果，设置题目的判题状态和信息
+            JudgeContext judgeContext = new JudgeContext();
+            judgeContext.setJudgeInfo(executeCodeResponse.getJudgeInfo());
+            judgeContext.setInputList(inputList);
+            judgeContext.setOutputList(outputList);
+            judgeContext.setJudgeCaseList(judgeCaseList);
+            judgeContext.setQuestion(question);
+            judgeContext.setQuestionSubmit(questionSubmit);
+            judgeInfo = judgeManager.doJudge(judgeContext);
+        }
         // 6）修改数据库中的判题结果
         questionSubmitUpdate = new QuestionSubmit();
         questionSubmitUpdate.setId(questionSubmitId);
         questionSubmitUpdate.setStatus(QuestionSubmitStatusEnum.SUCCEED.getValue());
         questionSubmitUpdate.setJudgeInfo(JSONUtil.toJsonStr(judgeInfo));
+        questionSubmitUpdate.setErrorMessage(errorMessage);
         update = questionFeignClient.updateQuestionSubmitById(questionSubmitUpdate);
         if (!update) {
             throw new BusinessException(ErrorCode.SYSTEM_ERROR, "题目状态更新错误");

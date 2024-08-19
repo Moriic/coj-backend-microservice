@@ -109,6 +109,15 @@ public class QuestionController {
         return ResultUtils.success(b);
     }
 
+    @PostMapping("/batch/delete")
+    public BaseResponse<Boolean> batchDeleteQuestion(@RequestBody DeleteRequest deleteRequest) {
+        if (deleteRequest == null || deleteRequest.getIds().isEmpty()) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        boolean b = questionService.removeBatchByIds(deleteRequest.getIds());
+        return ResultUtils.success(b);
+    }
+
     /**
      * 更新（仅管理员）
      *
@@ -337,4 +346,9 @@ public class QuestionController {
         return ResultUtils.success(questionSubmitVOList);
     }
 
+    @GetMapping("/question_submit/{id}")
+    public BaseResponse<QuestionSubmitVO> getQuestionSubmit(@PathVariable Long id) {
+        QuestionSubmit questionSubmit = questionSubmitService.getById(id);
+        return ResultUtils.success(QuestionSubmitVO.objToVo(questionSubmit));
+    }
 }

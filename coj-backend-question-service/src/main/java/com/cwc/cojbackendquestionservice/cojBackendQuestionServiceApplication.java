@@ -18,9 +18,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableDiscoveryClient
 @EnableFeignClients(basePackages = {"com.cwc.cojbackendserviceclient.service"}, defaultConfiguration = DefaultFeignConfig.class)
 public class cojBackendQuestionServiceApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(cojBackendQuestionServiceApplication.class, args);
     }
-
 }
