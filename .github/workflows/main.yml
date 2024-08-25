@@ -1,54 +1,78 @@
-name: Java CI with Maven
+name: Deploy with docker
 
 on:
   push:
-    # 分支
-    branches: [ main ]
-  pull_request:
     branches: [ main ]
 
 jobs:
   compile:
     runs-on: ubuntu-latest
-    name: Running Java ${{ matrix.java }} compile
     steps:
       - uses: actions/checkout@v2
-      - name: Set up JDK 1.8
-        uses: actions/setup-java@v1
+      - name: Set up JDK 8
+        uses: actions/setup-java@v2
         with:
-          java-version: 1.8
-      - name: 缓存 Maven 依赖
+          java-version: '1.8'
+          distribution: 'adopt'
+      # maven缓存，不加的话每次都会去重新拉取，会影响速度
+      - name: Dependies Cache
         uses: actions/cache@v2
         with:
           path: ~/.m2/repository
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
-      - name: 编译代码
-        run: mvn compile
-      - name: Deploy the JAR file to the remote server
-        uses: actions/checkout@v2
-      - name: Set up JDK 1.8
-        uses: actions/setup-java@v1
+      # 编译打包
+      - name: Build with Maven
+        run: mvn package -Dmaven.test.skip=true
+      # 登录Docker Hub
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
         with:
-          java-version: 1.8
-      - name: Generate the package
-        run: mvn -B package --file pom.xml -Dmaven.test.skip=true
-      - name: 将 JAR 包部署到服务器
-        uses: garygrossgarten/github-action-scp@release
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+      # build 镜像并push到中央仓库中
+      - name: Build and push coj-backend-gateway
+        id: docker_build
+        uses: docker/build-push-action@v2
         with:
-          local: target/github-actions-springboot-0.0.1-SNAPSHOT.jar
-          remote: /home/coj/coj-backend-microservice.jar
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.SSH_USER }}
-          password: ${{ secrets.SSH_PASSWORD }}
-      - name: 在服务器上执行 java -jar，请确保服务器安装了 JDK
-        if: always()
-        uses: fifsky/ssh-action@master
+          context: ./coj-backend-gateway
+          file:  ./coj-backend-gateway/Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/coj-backend-gateway:latest
+      - name: Build and push coj-backend-user-service
+        id: docker_build
+        uses: docker/build-push-action@v2
         with:
-          command: | # 命令中的 & 表示在后台运行进程
-            cd blog.imzjw.cn/actions/ && java -jar github-actions-springboot.jar &
-          host: ${{ secrets.HOST }}
-          user: ${{ secrets.SSH_USER }}
-          pass: ${{ secrets.SSH_PASSWORD }}
-          args: "-tt"
+          context: ./coj-backend-user-service
+          file: ./coj-backend-user-service/Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/coj-backend-user-service:latest
+      - name: Build and push coj-backend-question-service
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          context: ./coj-backend-question-service
+          file: ./coj-backend-question-service/Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/coj-backend-question-service:latest
+      - name: Build and push  coj-backend-judge-service
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          context: ./ coj-backend-judge-service
+          file: ./ coj-backend-judge-service/Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/ coj-backend-judge-service:latest
+#      # push后，用ssh连接服务器执行脚本
+#      - name: SSH
+#        uses: fifsky/ssh-action@master
+#        with:
+#          command: |
+#            sh start.sh
+#          host: ${{ secrets.HOST }}
+#          user: "root"
+#          key: ${{ secrets.PRIVATE_KEY}}
