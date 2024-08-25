@@ -60,13 +60,13 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/coj-backend-question-service:latest
       - name: Build and push coj-backend-judge-service
-        id: docker_build_ coj-backend-judge-service
+        id: docker_build_coj-backend-judge-service
         uses: docker/build-push-action@v2
         with:
-          context: ./ coj-backend-judge-service
-          file: ./ coj-backend-judge-service/Dockerfile
+          context: ./coj-backend-judge-service
+          file: ./coj-backend-judge-service/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/ coj-backend-judge-service:latest
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/coj-backend-judge-service:latest
 #      # push后，用ssh连接服务器执行脚本
 #      - name: SSH
 #        uses: fifsky/ssh-action@master
