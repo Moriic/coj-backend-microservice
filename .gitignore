@@ -31,3 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+/coj-backend-question-service/src/main/java/com/cwc/cojbackendquestionservice/lc/HttpInterceptorTest.java
+/coj-backend-question-service/src/main/java/com/cwc/cojbackendquestionservice/lc/OptionTest.java
+/coj-backend-question-service/src/test/java/com/cwc/cojbackendquestionservice/YuojBackendQuestionServiceApplicationTests.java
