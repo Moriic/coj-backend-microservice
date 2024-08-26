@@ -19,7 +19,7 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: 127.0.0.1:8848
+        server-addr: 47.76.180.81:8848
 server:
   address: 0.0.0.0
   port: 8102
