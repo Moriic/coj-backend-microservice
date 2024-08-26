@@ -67,12 +67,27 @@ jobs:
           file: ./coj-backend-judge-service/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/coj-backend-judge-service:latest
+      # 上传到服务器
+      - name: 发布到服务器
+        uses:  easingthemes/ssh-deploy@main
+        with:
+          # SCP参数
+          ARGS: "-avzr --delete"
+          # 私钥
+          SSH_PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+          # 源目录
+          SOURCE: "./docker-compose-service.yml"
+          # 服务器ip
+          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+          # 用户
+          REMOTE_USER: "root"
+          # 目标地址
+          TARGET: "/home/coj/docker-compose-service.yml"
       # push后，用ssh连接服务器执行脚本
       - name: SSH
         uses: fifsky/ssh-action@master
         with:
           command: |
-            scp -o StrictHostKeyChecking=no ./docker-compose-service.yml root@${{ secrets.REMOTE_HOST }}:/home/coj/docker-compose-service.yml
             docker ps -a -q --filter "name=coj-backend" | xargs docker rm -f
             docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/coj-backend-gateway:latest
             docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/coj-backend-user-service:latest
