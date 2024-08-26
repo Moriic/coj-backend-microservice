@@ -72,7 +72,7 @@ jobs:
         uses: fifsky/ssh-action@master
         with:
           command: |
-            scp ./docker-compose-service.yml root@${{ secrets.REMOTE_HOST }}:/home/coj/docker-compose-service.yml
+            scp -o StrictHostKeyChecking=no ./docker-compose-service.yml root@${{ secrets.REMOTE_HOST }}:/home/coj/docker-compose-service.yml
             docker ps -a -q --filter "name=coj-backend" | xargs docker rm -f
             docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/coj-backend-gateway:latest
             docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/coj-backend-user-service:latest
