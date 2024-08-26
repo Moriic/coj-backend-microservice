@@ -71,7 +71,7 @@ jobs:
       - name: SSH
         uses: fifsky/ssh-action@master
         with:
-          script: |
+          command: |
             scp ./docker-compose-service.yml root@${{ secrets.REMOTE_HOST }}:/home/coj/docker-compose-service.yml
             docker ps -a -q --filter "name=coj-backend" | xargs docker rm -f
             docker-compose -f /home/coj/docker-compose-service.yml up -d
