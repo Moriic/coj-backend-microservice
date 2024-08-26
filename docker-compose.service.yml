@@ -1,4 +1,3 @@
-version: '3'
 services:
   coj-backend-gateway:
     container_name: coj-backend-gateway

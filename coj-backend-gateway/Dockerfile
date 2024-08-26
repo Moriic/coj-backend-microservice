@@ -11,4 +11,4 @@ ADD target/coj-backend-gateway-0.0.1-SNAPSHOT.jar .
 EXPOSE 8101
   
 # 启动命令
-ENTRYPOINT ["java","-jar","/app/coj-backend-gateway-0.0.1-SNAPSHOT.jar","--spring.profiles.active=prod"]
+ENTRYPOINT ["java","-jar","/app/coj-backend-gateway-0.0.1-SNAPSHOT.jar","--spring.config.activate.on-profile=prod"]

@@ -67,12 +67,14 @@ jobs:
           file: ./coj-backend-judge-service/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/coj-backend-judge-service:latest
-#      # push后，用ssh连接服务器执行脚本
-#      - name: SSH
-#        uses: fifsky/ssh-action@master
-#        with:
-#          command: |
-#            sh start.sh
-#          host: ${{ secrets.HOST }}
-#          user: "root"
-#          key: ${{ secrets.PRIVATE_KEY}}
+      # push后，用ssh连接服务器执行脚本
+      - name: SSH
+        uses: fifsky/ssh-action@master
+        with:
+          script: |
+            scp ./docker-compose-service.yml root@${{ secrets.REMOTE_HOST }}:/home/coj/docker-compose-service.yml
+            docker ps -a -q --filter "name=coj-backend" | xargs docker rm -f
+            docker-compose -f /home/coj/docker-compose-service.yml up -d
+          user: "root"
+          host: ${{ secrets.REMOTE_HOST }}
+          key: ${{ secrets.PRIVATE_KEY}}
