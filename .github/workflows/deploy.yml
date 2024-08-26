@@ -74,7 +74,7 @@ jobs:
           command: |
             scp ./docker-compose-service.yml root@${{ secrets.REMOTE_HOST }}:/home/coj/docker-compose-service.yml
             docker ps -a -q --filter "name=coj-backend" | xargs docker rm -f
-            docker image prune -a
+            docker image prune -a -f
             docker-compose -f /home/coj/docker-compose-service.yml up -d
           user: "root"
           host: ${{ secrets.REMOTE_HOST }}
