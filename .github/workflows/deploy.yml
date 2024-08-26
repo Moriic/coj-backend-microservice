@@ -76,13 +76,13 @@ jobs:
           # 私钥
           SSH_PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
           # 源目录
-          SOURCE: "./docker-compose-service.yml"
+          SOURCE: "docker-compose.service.yml"
           # 服务器ip
           REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
           # 用户
           REMOTE_USER: "root"
           # 目标地址
-          TARGET: "/home/coj/docker-compose-service.yml"
+          TARGET: "/home/coj/docker-compose.service.yml"
       # push后，用ssh连接服务器执行脚本
       - name: SSH
         uses: fifsky/ssh-action@master
