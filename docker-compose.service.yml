@@ -36,3 +36,5 @@ services:
       - coj-backend-gateway
     networks:
       - mynetwork
+networks:
+  mynetwork:
