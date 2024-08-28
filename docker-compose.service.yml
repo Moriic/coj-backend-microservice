@@ -4,7 +4,8 @@ services:
     image: moriic/coj-backend-gateway
     ports:
       - "8101:8101"
-
+    networks:
+      - mynetwork
   coj-backend-user-service:
     container_name: coj-backend-user-service
     ports:
@@ -12,7 +13,8 @@ services:
     image: moriic/coj-backend-user-service
     depends_on:
       - coj-backend-gateway
-
+    networks:
+      - mynetwork
   coj-backend-question-service:
     container_name: coj-backend-question-service
     image: moriic/coj-backend-question-service
@@ -21,7 +23,8 @@ services:
     depends_on:
       - coj-backend-user-service
       - coj-backend-gateway
-
+    networks:
+      - mynetwork
   coj-backend-judge-service:
     container_name: coj-backend-judge-service
     image: moriic/coj-backend-judge-service
@@ -31,3 +34,5 @@ services:
       - coj-backend-user-service
       - coj-backend-question-service
       - coj-backend-gateway
+    networks:
+      - mynetwork
