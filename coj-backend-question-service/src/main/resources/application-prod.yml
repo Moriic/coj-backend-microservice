@@ -1,19 +1,8 @@
-# 公共配置文件
-
 spring:
-  application:
-    name: coj-backend-question-service
-  # 默认 dev 环境
-  profiles:
-    active: dev
-  # 支持 swagger3
-  mvc:
-    pathmatch:
-      matching-strategy: ant_path_matcher
   # 数据库配置
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/coj
+    url: jdbc:mysql://mysql:3306/coj
     username: root
     password: 123456
   servlet:
@@ -23,27 +12,9 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: 47.76.180.81:8848
+        server-addr: nacos:8848
   rabbitmq:
-    host: localhost
+    host: rabbitmq
     port: 5672
     password: guest
     username: guest
-server:
-  address: 0.0.0.0
-  port: 8103
-  servlet:
-    context-path: /api/question
-mybatis-plus:
-  configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-  global-config:
-    db-config:
-      logic-delete-field: isDelete # 全局逻辑删除的实体字段名
-      logic-delete-value: 1 # 逻辑已删除值（默认为 1）
-      logic-not-delete-value: 0 # 逻辑未删除值（默认为 0）
-# 代码沙箱配置
-codesandbox:
-  type: remote
-knife4j:
-  enable: true

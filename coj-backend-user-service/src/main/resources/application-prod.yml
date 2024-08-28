@@ -1,48 +1,23 @@
+# 生产环境配置文件
+# @author <a href="https://github.com/liyupi">程序员鱼皮</a>
+# @from <a href="https://yupi.icu">编程导航知识星球</a>
 spring:
-  application:
-    name: coj-backend-user-service
-  profiles:
-    active: dev
-  # swagger3
-  mvc:
-    pathmatch:
-      matching-strategy: ant_path_matcher
-  # MySql
+  # 数据库配置
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/coj
+    url: jdbc:mysql://mysql:3306/coj
     username: root
     password: 123456
   servlet:
     multipart:
+      # 大小限制
       max-file-size: 10MB
   cloud:
     nacos:
       discovery:
-        server-addr: 47.76.180.81:8848
-server:
-  address: 0.0.0.0
-  port: 8102
-  servlet:
-    context-path: /api/user
-mybatis-plus:
-  configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-  global-config:
-    db-config:
-      logic-delete-field: isDelete
-      logic-delete-value: 1
-      logic-not-delete-value: 0
-knife4j:
-  enable: true
-
-coj:
-  jwt:
-    # 设置jwt签名加密时使用的秘钥
-    user-secret-key: secretKey
-    # 设置前端传递过来的令牌名称
-    user-token-name: Authorization
-    # 设置token过期时间
-    token-ttl: 7200000
-    # 设置refreshToken过期时间
-    refresh-token-ttl: 720000000
+        server-addr: nacos:8848
+  rabbitmq:
+    host: rabbitmq
+    port: 5672
+    password: guest
+    username: guest

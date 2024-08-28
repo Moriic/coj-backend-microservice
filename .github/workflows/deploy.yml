@@ -89,6 +89,7 @@ jobs:
         with:
           command: |
             docker ps -a -q --filter "name=coj-backend" | xargs docker rm -f
+            docker image prune -a -f
             docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/coj-backend-gateway:latest
             docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/coj-backend-user-service:latest
             docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/coj-backend-question-service:latest
