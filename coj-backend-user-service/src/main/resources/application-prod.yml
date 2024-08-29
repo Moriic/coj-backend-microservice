@@ -5,7 +5,7 @@ spring:
   # 数据库配置
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://mysql:3306/coj
+    url: jdbc:mysql://coj-mysql:3306/coj
     username: root
     password: 123456
   servlet:
@@ -15,9 +15,9 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: nacos:8848
+        server-addr: coj-nacos:8848
   rabbitmq:
-    host: rabbitmq
+    host: coj-rabbitmq
     port: 5672
     password: guest
     username: guest
