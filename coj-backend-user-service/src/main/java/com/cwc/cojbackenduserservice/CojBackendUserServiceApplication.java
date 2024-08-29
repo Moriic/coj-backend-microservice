@@ -1,4 +1,4 @@
-package com.cwc.cojbackendquestionservice;
+package com.cwc.cojbackenduserservice;
 
 import com.cwc.cojbackendserviceclient.config.DefaultFeignConfig;
 import org.mybatis.spring.annotation.MapperScan;
@@ -11,14 +11,16 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
-@MapperScan("com.cwc.cojbackendquestionservice.mapper")
+@MapperScan("com.cwc.cojbackenduserservice.mapper")
 @EnableScheduling
 @EnableAspectJAutoProxy(proxyTargetClass = true, exposeProxy = true)
 @ComponentScan("com.cwc")
 @EnableDiscoveryClient
 @EnableFeignClients(basePackages = {"com.cwc.cojbackendserviceclient.service"}, defaultConfiguration = DefaultFeignConfig.class)
-public class cojBackendQuestionServiceApplication {
+public class CojBackendUserServiceApplication {
+
     public static void main(String[] args) {
-        SpringApplication.run(cojBackendQuestionServiceApplication.class, args);
+        SpringApplication.run(CojBackendUserServiceApplication.class, args);
     }
+
 }

@@ -1,7 +1,6 @@
-package com.cwc.cojbackenduserservice;
+package com.cwc.cojbackendjudgeservice;
 
 import com.cwc.cojbackendserviceclient.config.DefaultFeignConfig;
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
@@ -11,16 +10,17 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
-@MapperScan("com.cwc.cojbackenduserservice.mapper")
 @EnableScheduling
 @EnableAspectJAutoProxy(proxyTargetClass = true, exposeProxy = true)
 @ComponentScan("com.cwc")
 @EnableDiscoveryClient
 @EnableFeignClients(basePackages = {"com.cwc.cojbackendserviceclient.service"}, defaultConfiguration = DefaultFeignConfig.class)
-public class cojBackendUserServiceApplication {
+public class CojBackendJudgeServiceApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(cojBackendUserServiceApplication.class, args);
+        // 初始化消息队列，先注释掉，改用 Bean 的方式初始化消息队列（InitRabbitMqBean.java）
+//        InitRabbitMq.doInit();
+        SpringApplication.run(CojBackendJudgeServiceApplication.class, args);
     }
 
 }

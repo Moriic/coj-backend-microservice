@@ -8,10 +8,10 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 // startup.cmd -m standalone
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 @EnableDiscoveryClient
-public class cojBackendGatewayApplication {
+public class CojBackendGatewayApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(cojBackendGatewayApplication.class, args);
+        SpringApplication.run(CojBackendGatewayApplication.class, args);
     }
 
 }
