@@ -25,10 +25,10 @@ spring:
       discovery:
         server-addr: 127.0.0.1:8848
   rabbitmq:
-    host: 47.76.180.81
+    host: localhost
     port: 5672
-    username: moriic
-    password: qq1219533124.
+    username: guest
+    password: guest
 server:
   address: 0.0.0.0
   port: 8103
