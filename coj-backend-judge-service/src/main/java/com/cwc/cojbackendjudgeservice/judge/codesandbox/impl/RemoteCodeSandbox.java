@@ -27,8 +27,7 @@ public class RemoteCodeSandbox implements CodeSandbox {
 
     @Override
     public ExecuteCodeResponse executeCode(ExecuteCodeRequest executeCodeRequest) {
-        System.out.println("远程代码沙箱");
-        String url = "http://172.28.201.242:8090/executeCode";
+        String url = "http://localhost:8090/executeCode";
         String json = JSONUtil.toJsonStr(executeCodeRequest);
         String responseStr;
         try {
@@ -38,7 +37,7 @@ public class RemoteCodeSandbox implements CodeSandbox {
                 .execute()
                 .body();
         } catch (Exception e) {
-            log.error("connect remoteSandbox error, message = " + e.getMessage());
+            log.error("connect remoteSandbox error, message = {}", e.getMessage());
             ExecuteCodeResponse executeCodeResponse = new ExecuteCodeResponse();
             JudgeInfo judgeInfo = new JudgeInfo();
             judgeInfo.setMessage(JudgeInfoMessageEnum.SYSTEM_ERROR.getValue());
