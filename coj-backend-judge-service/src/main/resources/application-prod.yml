@@ -4,7 +4,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://coj-mysql:3306/coj
     username: root
-    password: 123456
+    password: qq1219533124.
   cloud:
     nacos:
       discovery:
@@ -12,5 +12,5 @@ spring:
   rabbitmq:
     host: coj-rabbitmq
     port: 5672
-    password: guest
-    username: guest
+    password: moriic
+    username: qq1219533124.
