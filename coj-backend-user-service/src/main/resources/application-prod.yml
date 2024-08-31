@@ -19,5 +19,5 @@ spring:
   rabbitmq:
     host: coj-rabbitmq
     port: 5672
-    password: moriic
-    username: qq1219533124.
+    username: moriic
+    password: qq1219533124.
