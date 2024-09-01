@@ -1,5 +1,6 @@
 package com.cwc.cojbackendmodel.model.enums;
 
+import lombok.Getter;
 import org.apache.commons.lang3.ObjectUtils;
 
 import java.util.Arrays;
@@ -10,6 +11,7 @@ import java.util.stream.Collectors;
  * 题目提交枚举
 
  */
+@Getter
 public enum QuestionSubmitStatusEnum {
 
     // 0 - 待判题、1 - 判题中、2 - 成功、3 - 失败
@@ -54,11 +56,4 @@ public enum QuestionSubmitStatusEnum {
         return null;
     }
 
-    public Integer getValue() {
-        return value;
-    }
-
-    public String getText() {
-        return text;
-    }
 }

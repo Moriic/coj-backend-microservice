@@ -1,5 +1,6 @@
 package com.cwc.cojbackendmodel.model.enums;
 
+import lombok.Getter;
 import org.apache.commons.lang3.ObjectUtils;
 
 import java.util.Arrays;
@@ -10,6 +11,7 @@ import java.util.stream.Collectors;
  * 用户角色枚举
 
  */
+@Getter
 public enum UserRoleEnum {
 
     USER("用户", "user"),
@@ -52,11 +54,4 @@ public enum UserRoleEnum {
         return null;
     }
 
-    public String getValue() {
-        return value;
-    }
-
-    public String getText() {
-        return text;
-    }
 }
