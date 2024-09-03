@@ -206,7 +206,7 @@ public class QuestionController {
     @PostMapping("/list/page/vo")
     public BaseResponse<Page<QuestionVO>> listQuestionVOByPage(@RequestBody QuestionQueryRequest questionQueryRequest) {
         long current = questionQueryRequest.getCurrent();
-        long size = questionQueryRequest.getPageSize();
+        long size = questionQueryRequest.getSize();
         // 限制爬虫
         ThrowUtils.throwIf(size > 20, ErrorCode.PARAMS_ERROR);
         Page<Question> questionPage = questionService.page(new Page<>(current, size),
@@ -227,7 +227,7 @@ public class QuestionController {
         }
         questionQueryRequest.setUserId(BaseContext.getCurrentUser().getId());
         long current = questionQueryRequest.getCurrent();
-        long size = questionQueryRequest.getPageSize();
+        long size = questionQueryRequest.getSize();
         // 限制爬虫
         ThrowUtils.throwIf(size > 20, ErrorCode.PARAMS_ERROR);
         Page<Question> questionPage = questionService.page(new Page<>(current, size),
@@ -245,7 +245,7 @@ public class QuestionController {
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Page<QuestionAllVO>> listQuestionByPage(@RequestBody QuestionQueryRequest questionQueryRequest) {
         long current = questionQueryRequest.getCurrent();
-        long size = questionQueryRequest.getPageSize();
+        long size = questionQueryRequest.getSize();
         Page<Question> questionPage = questionService.page(new Page<>(current, size),
                 questionService.getQueryWrapper(questionQueryRequest));
         return ResultUtils.success(questionService.getQuestionAllVOPage(questionPage));
@@ -319,7 +319,7 @@ public class QuestionController {
     @PostMapping("/question_submit/list/page")
     public BaseResponse<Page<QuestionSubmitVO>> listQuestionSubmitByPage(@RequestBody QuestionSubmitQueryRequest questionSubmitQueryRequest) {
         long current = questionSubmitQueryRequest.getCurrent();
-        long size = questionSubmitQueryRequest.getPageSize();
+        long size = questionSubmitQueryRequest.getSize();
         // 从数据库中查询原始的题目提交分页信息
         Page<QuestionSubmit> questionSubmitPage = questionSubmitService.page(new Page<>(current, size),
                 questionSubmitService.getQueryWrapper(questionSubmitQueryRequest));
