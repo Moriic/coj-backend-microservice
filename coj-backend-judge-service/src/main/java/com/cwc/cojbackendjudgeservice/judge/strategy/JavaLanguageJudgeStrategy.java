@@ -42,7 +42,7 @@ public class JavaLanguageJudgeStrategy implements JudgeStrategy {
         // 判断题目限制
         String judgeConfigStr = question.getJudgeConfig();
         JudgeConfig judgeConfig = JSONUtil.toBean(judgeConfigStr, JudgeConfig.class);
-        Long needMemoryLimit = judgeConfig.getMemoryLimit();
+        Long needMemoryLimit = judgeConfig.getMemoryLimit() * 1024 * 1024;
         Long needTimeLimit = judgeConfig.getTimeLimit();
         // 判断内存溢出
         if (memory > needMemoryLimit) {
